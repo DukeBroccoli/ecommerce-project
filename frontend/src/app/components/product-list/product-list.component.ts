@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from 'src/app/common/product';
 import { ProductService } from 'src/app/services/product.service';
@@ -8,7 +8,7 @@ import { ProductService } from 'src/app/services/product.service';
   templateUrl: './product-list-grid.component.html',
   styleUrls: ['./product-list.component.css']
 })
-export class ProductListComponent {
+export class ProductListComponent implements OnInit  {
 
   products: Product[] = [];
   currentCategoryId: number = 1;
@@ -28,7 +28,7 @@ export class ProductListComponent {
 
     if(hasCategoryId) {
       // get the "id" param string and convert to number
-      // "+" for converting string to number, "!" for non-null assertion
+      // "+" for converting string to number, "!" for not-null assertion
       this.currentCategoryId = +this.route.snapshot.paramMap.get('id')!;
     }
 

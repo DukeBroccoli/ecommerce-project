@@ -11,7 +11,10 @@ import { ProductService } from 'src/app/services/product.service';
 export class ProductListComponent implements OnInit  {
 
   products: Product[] = [];
+
+  // default to category 1 (Books)
   currentCategoryId: number = 1;
+  currentCategoryName: string = 'Books';
 
   constructor(private productService: ProductService,
               private route: ActivatedRoute) { }
@@ -30,6 +33,9 @@ export class ProductListComponent implements OnInit  {
       // get the "id" param string and convert to number
       // "+" for converting string to number, "!" for not-null assertion
       this.currentCategoryId = +this.route.snapshot.paramMap.get('id')!;
+
+      // get the "name" param string
+      this.currentCategoryName = this.route.snapshot.paramMap.get('name')!;
     }
 
     // get the products for the given category id

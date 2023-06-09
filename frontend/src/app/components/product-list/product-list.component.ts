@@ -26,6 +26,7 @@ export class ProductListComponent implements OnInit  {
       this.listProducts()
     });
   }
+  
   listProducts(): void {
     
     this.searchMode = this.route.snapshot.paramMap.has('keyword');
@@ -68,7 +69,7 @@ export class ProductListComponent implements OnInit  {
       data => {
         this.products = data;
       }
-    )
+    );
   }
 
 }

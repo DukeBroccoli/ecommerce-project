@@ -18,11 +18,9 @@ export class ProductService {
 
   getProductList(categoryId: number): Observable<Product[]> {
 
-    const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${categoryId}`;
+    const searchUrl = `${this.baseUrl}/search/findByCategoryIdIs?id=${categoryId}`;
 
-    return this.httpClient.get<GetReponseProduct>(searchUrl).pipe(
-      map(response => response._embedded.products)
-    );
+    return this.getProducts(searchUrl);
   }
 
   getProductCategories(): Observable<ProductCategory[]> {
@@ -30,10 +28,23 @@ export class ProductService {
       map(response => response._embedded.productCategory)
     );
   }
+
+  searchProducts(searchKeyWord: string): Observable<Product[]> {
+
+    const searchUrl = `${this.baseUrl}/search/findByNameContaining?name=${searchKeyWord}`;
+
+    return this.getProducts(searchUrl);
+  }
+
+  private getProducts(searchUrl: string): Observable<Product[]> {
+    return this.httpClient.get<GetResponseProducts>(searchUrl).pipe(
+      map(response => response._embedded.products)
+    );
+  }
 }
 
 
-interface GetReponseProduct {
+interface GetResponseProducts {
   _embedded: {
     products: Product[];
   }

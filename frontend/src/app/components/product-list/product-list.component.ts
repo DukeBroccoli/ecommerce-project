@@ -15,7 +15,9 @@ export class ProductListComponent implements OnInit  {
   // default to category 1 (Books)
   currentCategoryId: number = 1;
   currentCategoryName: string = 'Books';
+
   previousCategoryId: number = 1;
+  previousKeyword: string = "";
 
   searchMode: boolean = false;
 
@@ -48,11 +50,16 @@ export class ProductListComponent implements OnInit  {
     
     const searchKeyWord: string = this.route.snapshot.paramMap.get('keyword')!;
 
-    this.productService.searchProducts(searchKeyWord).subscribe(
-      data => {
-        this.products = data;
-      }
-    );
+    if(searchKeyWord != this.previousKeyword) {
+      this.pageNumber = 1;
+      this.previousKeyword = searchKeyWord;
+    }
+
+    console.log(`currentSearchKeyword=${searchKeyWord}, pageNumber=${this.pageNumber}`);
+
+    this.productService.searchProductsPaginate(this.pageNumber - 1, 
+                                       this.pageSize,
+                                       searchKeyWord).subscribe(this.processResult());
   }
 
   listProductsByCategory(): void {
@@ -81,16 +88,18 @@ export class ProductListComponent implements OnInit  {
 
     // get the products for the given category id
     // "-1" since pages in Spring Data REST are 0-based
-    this.productService.getProductListPaginate(this.pageNumber - 1,
+    this.productService.getProductsByCategoryPaginate(this.pageNumber - 1,
                                                this.pageSize,
-                                               this.currentCategoryId).subscribe(
-      data => {
-        this.products = data._embedded.products;
-        this.pageNumber = data.page.number + 1;
-        this.pageSize = data.page.size;
-        this.totalElements = data.page.totalElements;
-      }
-    );
+                                               this.currentCategoryId).subscribe(this.processResult());
+  }
+
+  private processResult() {
+    return (data: any) => {
+      this.products = data._embedded.products;
+      this.pageNumber = data.page.number + 1;
+      this.pageSize = data.page.size;
+      this.totalElements = data.page.totalElements;
+    }
   }
 
   updatePageSize(newPageSize: string): void {

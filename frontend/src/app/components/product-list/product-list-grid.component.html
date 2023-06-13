@@ -1,8 +1,10 @@
 <div class="main-content">
     <div class="section-content section-content-p30">
 
-        <h3><b>Category: {{ currentCategoryName }}</b></h3>
-        <hr>
+        <div *ngIf="!searchMode">
+            <h3><b>Category: {{ currentCategoryName }}</b></h3>
+            <hr>
+        </div>
 
         <div class="container-fluid">
             <div class="row">

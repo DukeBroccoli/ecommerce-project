@@ -14,21 +14,17 @@ export class CartService {
 
   constructor() { }
 
-  addToCart(item: CartItem) {
+  addToCart(itemToBeAdded: CartItem) {
 
-    let cartItemAlreadyExists: boolean = false;
+    let existingCartItem = this.cartItems.find(
+      cartItem => cartItem.id == itemToBeAdded.id
+    );
 
-    // check if the item to be added is already in the cart
-    for(let cartItem of this.cartItems) {
-      if(item.id == cartItem.id) {
-        cartItem.quantity++;
-        cartItemAlreadyExists = true;
-        break;
-      }
+    if(existingCartItem != undefined) {
+      existingCartItem.quantity++;
     }
-
-    if(!cartItemAlreadyExists) {
-      this.cartItems.push(item);
+    else {
+      this.cartItems.push(itemToBeAdded);
     }
 
     this.computeTotals();
